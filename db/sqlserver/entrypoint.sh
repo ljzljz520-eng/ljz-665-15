@@ -45,4 +45,7 @@ python3 /work/convert_mysql_to_sqlserver.py /work/jeecgboot-mysql-5.7.sql > /tmp
 echo "Applying schema to ${MSSQL_DB}... (this may take a few minutes)"
 "${SQLCMD_BIN}" -S "${MSSQL_HOST},${MSSQL_PORT}" -U "${MSSQL_USER}" -P "${MSSQL_PASSWORD}" -C -d "${MSSQL_DB}" -b -f 65001 -i /tmp/jeecgboot-sqlserver.sql
 
+echo "Applying device module schema to ${MSSQL_DB}..."
+"${SQLCMD_BIN}" -S "${MSSQL_HOST},${MSSQL_PORT}" -U "${MSSQL_USER}" -P "${MSSQL_PASSWORD}" -C -d "${MSSQL_DB}" -b -f 65001 -i /work/device_module_sqlserver.sql
+
 echo "Database initialization finished."

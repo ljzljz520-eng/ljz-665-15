@@ -7,6 +7,7 @@
 - [开发指南](开发指南.md)
 - [测试指南](测试指南.md)
 - [用户手册](用户手册.md)
+- [设备管理模块](设备管理模块.md)（设备状态流转限制与操作记录）
 - [Implementation Plan](Implementation-Plan.md)
 - [Task List](Task-List.md)
 - [Walkthrough](Walkthrough.md)
