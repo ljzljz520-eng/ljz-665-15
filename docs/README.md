@@ -10,4 +10,5 @@
 - [Implementation Plan](Implementation-Plan.md)
 - [Task List](Task-List.md)
 - [Walkthrough](Walkthrough.md)
+- [设备管理模块](设备管理模块.md)（设备状态流转限制与操作记录）
 
