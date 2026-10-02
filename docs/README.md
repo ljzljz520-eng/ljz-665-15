@@ -10,4 +10,5 @@
 - [Implementation Plan](Implementation-Plan.md)
 - [Task List](Task-List.md)
 - [Walkthrough](Walkthrough.md)
+- [设备状态流转](设备状态流转.md)
 

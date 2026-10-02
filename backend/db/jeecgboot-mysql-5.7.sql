@@ -10347,3 +10347,51 @@ END
 delimiter ;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- 设备管理模块（device）
+-- ----------------------------
+DROP TABLE IF EXISTS `device`;
+CREATE TABLE `device`  (
+  `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主键ID',
+  `device_code` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '设备编号',
+  `device_name` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '设备名称',
+  `device_model` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '设备型号',
+  `status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '设备状态：1-在用 2-维修 3-停用 4-报废',
+  `location` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '存放位置',
+  `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `create_by` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_device_code`(`device_code`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '设备表' ROW_FORMAT = DYNAMIC;
+
+DROP TABLE IF EXISTS `device_status_record`;
+CREATE TABLE `device_status_record`  (
+  `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主键ID',
+  `device_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '设备ID',
+  `device_code` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '设备编号',
+  `device_name` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '设备名称',
+  `before_status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '变更前状态：1-在用 2-维修 3-停用 4-报废',
+  `after_status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '变更后状态：1-在用 2-维修 3-停用 4-报废',
+  `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '变更说明',
+  `create_by` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '操作时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_dsr_device_id`(`device_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '设备状态流转记录表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- 菜单与按钮权限：设备管理
+-- 字段顺序：id, parent_id, name, url, component, is_route, component_name, redirect, menu_type, perms, perms_type, sort_no, always_show, icon, is_leaf, keep_alive, hidden, hide_tab, description, create_by, create_time, update_by, update_time, del_flag, rule_flag, status(无), tenant_id
+-- ----------------------------
+INSERT INTO `sys_permission` VALUES ('9001000000000000001', '', '设备管理', '/device', 'layouts/default/index', 1, NULL, NULL, 0, NULL, '1', 5.00, 0, 'ant-design:laptop-outlined', 0, 0, 0, 0, '设备管理', 'admin', GETDATE(), NULL, NULL, 0, 0, '1', 0);
+INSERT INTO `sys_permission` VALUES ('9001000000000000002', '9001000000000000001', '设备列表', '/device/deviceList', 'device/deviceList/index', 1, NULL, NULL, 1, NULL, '1', 1.00, 0, 'ant-design:desktop-outlined', 1, 1, 0, 0, '设备列表与状态流转', 'admin', GETDATE(), NULL, NULL, 0, 0, '1', 0);
+INSERT INTO `sys_permission` VALUES ('9001000000000000003', '9001000000000000001', '操作记录', '/device/statusRecord', 'device/statusRecord/index', 1, NULL, NULL, 1, NULL, '1', 2.00, 0, 'ant-design:history-outlined', 1, 1, 0, 0, '设备状态流转操作记录', 'admin', GETDATE(), NULL, NULL, 0, 0, '1', 0);
+-- 设备列表按钮权限
+INSERT INTO `sys_permission` VALUES ('9001000000000000010', '9001000000000000002', '新增', NULL, NULL, 1, NULL, NULL, 2, 'device:device:add', '1', 1.00, 0, NULL, 1, 0, 0, NULL, NULL, 'admin', GETDATE(), NULL, NULL, 0, 0, '1', 0);
+INSERT INTO `sys_permission` VALUES ('9001000000000000011', '9001000000000000002', '编辑', NULL, NULL, 1, NULL, NULL, 2, 'device:device:edit', '1', 2.00, 0, NULL, 1, 0, 0, NULL, NULL, 'admin', GETDATE(), NULL, NULL, 0, 0, '1', 0);
+INSERT INTO `sys_permission` VALUES ('9001000000000000012', '9001000000000000002', '删除', NULL, NULL, 1, NULL, NULL, 2, 'device:device:delete', '1', 3.00, 0, NULL, 1, 0, 0, NULL, NULL, 'admin', GETDATE(), NULL, NULL, 0, 0, '1', 0);
+INSERT INTO `sys_permission` VALUES ('9001000000000000013', '9001000000000000002', '状态变更', NULL, NULL, 1, NULL, NULL, 2, 'device:device:changeStatus', '1', 4.00, 0, NULL, 1, 0, 0, NULL, NULL, 'admin', GETDATE(), NULL, NULL, 0, 0, '1', 0);
